@@ -26,12 +26,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.deenlabs.localsaggregate.AddProductScreen
+import org.deenlabs.localsaggregate.viewmodel.ProductViewModel
 import org.deenlabs.localsaggregate.viewmodel.CartViewModel
 
 @Composable
 fun App() {
     MaterialTheme {
         val navViewModel = remember { NavigationViewModel() }
+        val productViewModel = remember { ProductViewModel() }
         val cartViewModel = remember { CartViewModel() }
 
         when (val screen = navViewModel.currentScreen) {
@@ -43,13 +46,21 @@ fun App() {
             is Screen.Login -> LoginScreen(
                 role = screen.role,
                 onNavigateBack = { navViewModel.onBack() },
-                onLoginSuccess = { navViewModel.navigateTo(Screen.ProductList(screen.role)) }
+                onLoginSuccess = {
+                    if (screen.role == "Store") {
+                        navViewModel.navigateTo(Screen.AddProduct(screen.role))
+                    } else {
+                        navViewModel.navigateTo(Screen.ProductList(screen.role))
+                    }
+                }
             )
             is Screen.ProductList -> ProductListScreen(
                 role = screen.role,
+                productViewModel = productViewModel,
                 cartViewModel = cartViewModel,
                 onBack = { navViewModel.onBack() },
-                onNavigateToCart = { navViewModel.navigateTo(Screen.Cart(screen.role)) }
+                onNavigateToCart = { navViewModel.navigateTo(Screen.Cart(screen.role)) },
+                onNavigateToAddProduct = { navViewModel.navigateTo(Screen.AddProduct(screen.role)) }
             )
             is Screen.Cart -> CartScreen(
                 cartViewModel = cartViewModel,
@@ -61,6 +72,13 @@ fun App() {
                 onBack = { navViewModel.onBack() },
                 onOrderConfirmed = {
                     navViewModel.navigateTo(Screen.ProductList(screen.role))
+                }
+            )
+            is Screen.AddProduct -> AddProductScreen(
+                onBack = { navViewModel.onBack() },
+                onAddProduct = { name, price, weight ->
+                    productViewModel.addProduct(name, price, weight)
+                    navViewModel.onBack()
                 }
             )
         }

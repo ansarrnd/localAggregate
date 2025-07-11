@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.deenlabs.localsaggregate.model.CartItem
+import org.deenlabs.localsaggregate.utils.formatPrice
 import org.deenlabs.localsaggregate.viewmodel.CartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -108,7 +109,7 @@ private fun CartItem(
             Column(modifier = Modifier.weight(1f).padding(start = 8.dp)) {
                 Text(item.product.name, style = MaterialTheme.typography.titleMedium)
                 Text(
-                    "$${"%.2f".format(item.product.price)}",
+                    formatPrice(item.product.price),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -145,7 +146,7 @@ private fun CheckoutBar(totalPrice: Double, onCheckout: () -> Unit) {
             ) {
                 Text("Total", style = MaterialTheme.typography.titleLarge)
                 Text(
-                    "$${"%.2f".format(totalPrice)}",
+                    formatPrice(totalPrice),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )

@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import org.deenlabs.localsaggregate.utils.formatPrice
 import org.deenlabs.localsaggregate.viewmodel.CartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -123,7 +124,7 @@ private fun OrderSummaryCard(totalPrice: Double) {
         ) {
             Text("Total Amount", style = MaterialTheme.typography.titleLarge)
             Text(
-                text = "$${"%.2f".format(totalPrice)}",
+                text = formatPrice(totalPrice),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )

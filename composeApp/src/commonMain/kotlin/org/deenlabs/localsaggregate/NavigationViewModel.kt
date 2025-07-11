@@ -11,6 +11,7 @@ sealed class Screen {
     data class ProductList(val role: String) : Screen()
     data class Cart(val role: String) : Screen()
     data class Checkout(val role: String) : Screen()
+    data class AddProduct(val role: String) : Screen()
 }
 
 class NavigationViewModel : ViewModel() {
@@ -28,6 +29,7 @@ class NavigationViewModel : ViewModel() {
             is Screen.ProductList -> Screen.Login(current.role)
             is Screen.Cart -> Screen.ProductList(current.role)
             is Screen.Checkout -> Screen.Cart(current.role)
+            is Screen.AddProduct -> Screen.ProductList(current.role)
             is Screen.RoleSelection -> Screen.RoleSelection // Or handle app exit
         }
     }
