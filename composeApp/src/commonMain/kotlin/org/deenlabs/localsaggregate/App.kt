@@ -26,11 +26,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.deenlabs.localsaggregate.viewmodel.CartViewModel
 
 @Composable
 fun App() {
     MaterialTheme {
         val navViewModel = remember { NavigationViewModel() }
+        val cartViewModel = remember { CartViewModel() }
 
         when (val screen = navViewModel.currentScreen) {
             is Screen.RoleSelection -> RoleSelectionScreen(
@@ -45,7 +47,21 @@ fun App() {
             )
             is Screen.ProductList -> ProductListScreen(
                 role = screen.role,
-                onBack = { navViewModel.onBack() }
+                cartViewModel = cartViewModel,
+                onBack = { navViewModel.onBack() },
+                onNavigateToCart = { navViewModel.navigateTo(Screen.Cart(screen.role)) }
+            )
+            is Screen.Cart -> CartScreen(
+                cartViewModel = cartViewModel,
+                onBack = { navViewModel.onBack() },
+                onNavigateToCheckout = { navViewModel.navigateTo(Screen.Checkout(screen.role)) }
+            )
+            is Screen.Checkout -> CheckoutScreen(
+                cartViewModel = cartViewModel,
+                onBack = { navViewModel.onBack() },
+                onOrderConfirmed = {
+                    navViewModel.navigateTo(Screen.ProductList(screen.role))
+                }
             )
         }
     }
