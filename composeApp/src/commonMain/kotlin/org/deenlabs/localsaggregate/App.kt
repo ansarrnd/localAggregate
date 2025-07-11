@@ -20,42 +20,65 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
     MaterialTheme {
-        Scaffold(
-            topBar = {
-                TopAppBar(title = { Text("Welcome") })
-            }
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    "Please select your role",
-                    style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(bottom = 32.dp)
-                )
+        val navViewModel = remember { NavigationViewModel() }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    OptionCard("Store", Icons.Default.Storefront) { /* TODO: Handle Store click */ }
-                    OptionCard("Customer", Icons.Default.Person) { /* TODO: Handle Customer click */ }
+        when (val screen = navViewModel.currentScreen) {
+            is Screen.RoleSelection -> RoleSelectionScreen(
+                onNavigateToLogin = { role ->
+                    navViewModel.navigateTo(Screen.Login(role))
                 }
+            )
+            is Screen.Login -> LoginScreen(
+                role = screen.role,
+                onNavigateBack = { navViewModel.onBack() },
+                onLoginSuccess = { navViewModel.navigateTo(Screen.ProductList(screen.role)) }
+            )
+            is Screen.ProductList -> ProductListScreen(
+                role = screen.role,
+                onBack = { navViewModel.onBack() }
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RoleSelectionScreen(onNavigateToLogin: (String) -> Unit) {
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("Welcome") })
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                "Please select your role",
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(bottom = 32.dp)
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                OptionCard("Store", Icons.Default.Storefront) { onNavigateToLogin("Store") }
+                OptionCard("Customer", Icons.Default.Person) { onNavigateToLogin("Customer") }
             }
         }
     }
