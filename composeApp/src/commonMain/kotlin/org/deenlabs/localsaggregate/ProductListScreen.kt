@@ -62,7 +62,7 @@ fun ProductListScreen(
     val scope = rememberCoroutineScope()
     var filterText by remember { mutableStateOf("") }
 
-    val filteredProducts = remember(filterText) {
+    val filteredProducts = remember(productViewModel.products, filterText) {
         if (filterText.isBlank()) {
             productViewModel.products
         } else {
