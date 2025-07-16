@@ -1,0 +1,15 @@
+CREATE TABLE Product (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    price REAL NOT NULL,
+    weight TEXT,
+    imageUrl TEXT NOT NULL
+);
+
+insertProduct:
+INSERT INTO Product(name, price, weight, imageUrl)
+VALUES (:name, :price, :weight, :imageUrl);
+
+getAllProducts:
+SELECT *
+FROM Product;

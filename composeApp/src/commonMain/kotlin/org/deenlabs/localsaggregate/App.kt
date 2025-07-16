@@ -28,13 +28,14 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.deenlabs.localsaggregate.AddProductScreen
 import org.deenlabs.localsaggregate.viewmodel.ProductViewModel
+import org.deenlabs.localsaggregate.injection.getProductViewModel
 import org.deenlabs.localsaggregate.viewmodel.CartViewModel
 
 @Composable
 fun App() {
     MaterialTheme {
         val navViewModel = remember { NavigationViewModel() }
-        val productViewModel = remember { ProductViewModel() }
+        val productViewModel = getProductViewModel()
         val cartViewModel = remember { CartViewModel() }
 
         when (val screen = navViewModel.currentScreen) {

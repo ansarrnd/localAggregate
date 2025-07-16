@@ -34,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -61,12 +62,13 @@ fun ProductListScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     var filterText by remember { mutableStateOf("") }
+    val products by productViewModel.products.collectAsState()
 
-    val filteredProducts = remember(productViewModel.products, filterText) {
+    val filteredProducts = remember(products, filterText) {
         if (filterText.isBlank()) {
-            productViewModel.products
+            products
         } else {
-            productViewModel.products.filter { it.name.contains(filterText, ignoreCase = true) }
+            products.filter { it.name.contains(filterText, ignoreCase = true) }
         }
     }
 
