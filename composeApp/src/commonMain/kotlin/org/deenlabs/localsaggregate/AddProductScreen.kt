@@ -57,8 +57,7 @@ fun AddProductScreen(
         ) {
             OutlinedTextField(value = productName, onValueChange = { productName = it }, label = { Text("Product Name") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
             OutlinedTextField(value = productPrice, onValueChange = { productPrice = it }, label = { Text("Product Price") }, modifier = Modifier.fillMaxWidth(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal), singleLine = true)
-            OutlinedTextField(value = productWeight, onValueChange = { productWeight = it }, label = { Text("Weight (e.g., 1kg, 500g) (Optional)") }, modifier = Modifier.fillMaxWidth(), singleLine = true)
-            Spacer(modifier = Modifier.height(16.dp))
+            OutlinedTextField(value = productWeight, onValueChange = { productWeight = it }, label = { Text("Weight (in grams, optional)") }, modifier = Modifier.fillMaxWidth(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), singleLine = true)
             Button(
                 onClick = {
                     productPrice.toDoubleOrNull()?.let { price ->

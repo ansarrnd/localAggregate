@@ -1,7 +1,7 @@
 package org.deenlabs.localsaggregate.injection
 
+import androidx.compose.runtime.Composable
 import org.deenlabs.localsaggregate.viewmodel.StoreViewModel
 
-private val storeViewModel = StoreViewModel()
-
-fun getStoreViewModel(): StoreViewModel = storeViewModel
+@Composable
+expect fun getStoreViewModel(): StoreViewModel

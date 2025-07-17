@@ -17,7 +17,7 @@ interface ProductDataSource {
 
 class SqlDelightProductDataSource(db: LocalsAggregateDatabase) : ProductDataSource {
 
-    private val queries = db.productQueries
+    private val queries = db.localsAggregateQueries // Access the generated queries here
 
     override fun getAllProducts(): Flow<List<GroceryProduct>> {
         return queries.getAllProducts()

@@ -71,10 +71,16 @@ fun AddStoreScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = { onSaveStore(storeName, storeLocation) },
+                onClick = {
+                    if (storeName.isNotBlank() && storeLocation.isNotBlank()) {
+                        onSaveStore(storeName, storeLocation)
+                    }
+                },
                 enabled = storeName.isNotBlank() && storeLocation.isNotBlank(),
                 modifier = Modifier.fillMaxWidth()
-            ) { Text("Save Store") }
+            ) {
+                Text("Save Store")
+            }
         }
     }
 }

@@ -106,7 +106,7 @@ fun App() {
             is Screen.AddStore -> AddStoreScreen(
                 onBack = { navViewModel.onBack() },
                 onSaveStore = { name, location ->
-                    storeViewModel.addStore(name, location)
+                    storeViewModel.addStore(name,location)
                     navViewModel.navigateTo(Screen.ListStores(screen.role))
                 }
             )

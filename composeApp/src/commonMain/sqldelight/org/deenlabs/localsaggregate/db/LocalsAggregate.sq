@@ -1,0 +1,25 @@
+CREATE TABLE product (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    price REAL NOT NULL,
+    weight TEXT,
+    imageUrl TEXT NOT NULL
+);
+
+getAllProducts:
+SELECT * FROM product;
+
+insertProduct:
+INSERT INTO product(name, price, weight, imageUrl) VALUES (?, ?, ?, ?);
+
+CREATE TABLE store (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    location TEXT NOT NULL
+);
+
+getAllStores:
+SELECT * FROM store;
+
+insertStore:
+INSERT INTO store(name, location) VALUES (?, ?);
