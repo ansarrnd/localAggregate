@@ -99,8 +99,10 @@ fun ProductListScreen(
         },
         floatingActionButton = {
             if (role == "Store") {
-                FloatingActionButton(onClick = onNavigateToAddProduct) {
-                    Icon(Icons.Default.Add, contentDescription = "Add Product")
+                Row {
+                    FloatingActionButton(onClick = onNavigateToAddProduct) {
+                        Icon(Icons.Default.Add, contentDescription = "Add Product")
+                    }
                 }
             }
         }

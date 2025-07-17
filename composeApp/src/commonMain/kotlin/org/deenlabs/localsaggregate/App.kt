@@ -25,17 +25,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import org.deenlabs.localsaggregate.RoleSelectionScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.deenlabs.localsaggregate.AddProductScreen
 import org.deenlabs.localsaggregate.viewmodel.ProductViewModel
 import org.deenlabs.localsaggregate.injection.getProductViewModel
 import org.deenlabs.localsaggregate.viewmodel.CartViewModel
+import org.deenlabs.localsaggregate.injection.getStoreViewModel
+import org.deenlabs.localsaggregate.viewmodel.StoreViewModel
 
 @Composable
 fun App() {
     MaterialTheme {
         val navViewModel = remember { NavigationViewModel() }
         val productViewModel = getProductViewModel()
+        val storeViewModel = getStoreViewModel()
         val cartViewModel = remember { CartViewModel() }
 
         when (val screen = navViewModel.currentScreen) {
@@ -48,19 +52,36 @@ fun App() {
                 role = screen.role,
                 onNavigateBack = { navViewModel.onBack() },
                 onLoginSuccess = {
-                    if (screen.role == "Store") {
-                        navViewModel.navigateTo(Screen.AddProduct(screen.role))
-                    } else {
-                        navViewModel.navigateTo(Screen.ProductList(screen.role))
-                    }
+                    navViewModel.navigateTo(
+                        if (screen.role == "Store") Screen.StoreOptions(screen.role) else Screen.ProductList(
+                            screen.role
+                        )
+                    )
+
                 }
             )
+            is Screen.StoreOptions -> StoreOptionsScreen(
+                onNavigateToAddProduct = {
+                    navViewModel.navigateTo(Screen.AddProduct(screen.role))
+                },
+                onNavigateToAddStore = {
+                    navViewModel.navigateTo(Screen.AddStore(screen.role))
+                },
+                onNavigateToListStores = {
+                    navViewModel.navigateTo(Screen.ListStores(screen.role))
+                },
+                onBack = {
+                    navViewModel.onBack()
+
+                })
             is Screen.ProductList -> ProductListScreen(
                 role = screen.role,
                 productViewModel = productViewModel,
                 cartViewModel = cartViewModel,
                 onBack = { navViewModel.onBack() },
-                onNavigateToCart = { navViewModel.navigateTo(Screen.Cart(screen.role)) },
+                onNavigateToCart = {
+                    navViewModel.navigateTo(Screen.Cart(screen.role))
+                                   },
                 onNavigateToAddProduct = { navViewModel.navigateTo(Screen.AddProduct(screen.role)) }
             )
             is Screen.Cart -> CartScreen(
@@ -82,61 +103,20 @@ fun App() {
                     navViewModel.onBack()
                 }
             )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun RoleSelectionScreen(onNavigateToLogin: (String) -> Unit) {
-    Scaffold(
-        topBar = {
-            TopAppBar(title = { Text("Welcome") })
-        }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                "Please select your role",
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(bottom = 32.dp)
+            is Screen.AddStore -> AddStoreScreen(
+                onBack = { navViewModel.onBack() },
+                onSaveStore = { name, location ->
+                    storeViewModel.addStore(name, location)
+                    navViewModel.navigateTo(Screen.ListStores(screen.role))
+                }
+            )
+            is Screen.ListStores -> ListStoresScreen(
+                storeViewModel = storeViewModel,
+                onBack = {
+                    navViewModel.onBack()
+                }
             )
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                OptionCard("Store", Icons.Default.Storefront) { onNavigateToLogin("Store") }
-                OptionCard("Customer", Icons.Default.Person) { onNavigateToLogin("Customer") }
-            }
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun OptionCard(title: String, icon: ImageVector, onClick: () -> Unit) {
-    Card(onClick = onClick, modifier = Modifier.size(150.dp)) {
-        Column(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Icon(imageVector = icon, contentDescription = title, modifier = Modifier.size(48.dp))
-            Spacer(Modifier.height(16.dp))
-            Text(text = title, style = MaterialTheme.typography.titleLarge)
-        }
-    }
-}
-
-@Preview
-@Composable
-fun AppPreview() {
-    App()
 }
