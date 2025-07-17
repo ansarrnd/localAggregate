@@ -48,7 +48,7 @@ fun App() {
                 role = screen.role,
                 onNavigateBack = { navViewModel.onBack() },
                 onLoginSuccess = {
-                    if (screen.role == "Store") {
+                    if (screen.role == "Customer") {
                         navViewModel.navigateTo(Screen.AddProduct(screen.role))
                     } else {
                         navViewModel.navigateTo(Screen.ProductList(screen.role))
@@ -79,6 +79,12 @@ fun App() {
                 onBack = { navViewModel.onBack() },
                 onAddProduct = { name, price, weight ->
                     productViewModel.addProduct(name, price, weight)
+                    navViewModel.onBack()
+                }
+            )
+            is Screen.AddStore -> AddStoreScreen(
+                onBack = { navViewModel.onBack() },
+                onSaveStore = { name, location ->
                     navViewModel.onBack()
                 }
             )
